@@ -3,6 +3,7 @@ export const evaluateFormula = (input) => {
     // Check if the input is a formula (starts with '=')
     if (input.startsWith('=')) {
       // Evaluate the formula
+      // eslint-disable-next-line no-eval
       const result = eval(input.slice(1));
       return result.toString();
     }
