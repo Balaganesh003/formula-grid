@@ -1,4 +1,3 @@
-// gridHelpers.js
 export const evaluateFormula = (input) => {
   try {
     // Check if the input is a formula (starts with '=')
