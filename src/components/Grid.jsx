@@ -78,7 +78,7 @@ function serializeCell(cell) {
 
   return (
     <div>
-      <div className="grid grid-cols-4 grid-rows-4">
+     <div className="grid grid-cols-4 gap-4">
         {gridData.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
             <Cell
