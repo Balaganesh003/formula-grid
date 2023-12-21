@@ -1,11 +1,21 @@
+const initialGrid = () => {
+  return Array.from({ length: 4 }, () => new Array(4).fill(''));
+};
+
+
 export const evaluateFormula = (input) => {
   try {
-    // Check if the input is a formula (starts with '=')
     if (input.startsWith('=')) {
-      // Evaluate the formula
-      // eslint-disable-next-line no-eval
-      const result = eval(input.slice(1));
-      return result.toString();
+      const formula = input.slice(1).trim();
+
+      if (formula && !/[=+\-*/]$/.test(formula)) {
+        // eslint-disable-next-line no-eval
+        const result = eval(formula);
+        return result.toString();
+      } else {
+
+        return input;
+      }
     }
   } catch (error) {
     console.error("Error evaluating formula:", error);
@@ -15,27 +25,50 @@ export const evaluateFormula = (input) => {
 };
 
 
+
+
 export const saveState = (gridData) => {
   try {
-    // Create a deep copy of the gridData that only includes serializable values
-    const serializableGridData = gridData.map(row =>
-      row.map(cell => {
-        // Assuming cell is a string or a simple serializable object
-        // Modify this according to your grid data structure
-        return typeof cell === 'object' ? { ...cell } : cell;
-      })
-    );
-
-    localStorage.setItem('gridState', JSON.stringify(serializableGridData));
+    const serializedData = JSON.stringify(gridData);
+    localStorage.setItem('gridState', serializedData);
   } catch (error) {
     console.error("Error saving state:", error);
-    // Additional error handling as needed
+  }
+};
+
+export const loadState = (key = 'gridState') => {
+  try {
+    const savedState = localStorage.getItem(key);
+    return savedState ? JSON.parse(savedState) : initialGrid();
+  } catch (error) {
+    console.error("Error loading state:", error);
+    return initialGrid();
   }
 };
 
 
 
-export const loadState = () => {
-  const savedState = localStorage.getItem('gridState');
-  return savedState ? JSON.parse(savedState) : null;
+
+export const saveStateToHistory = (gridData, rowIndex, colIndex, initialState, finalState) => {
+  try {
+    let currentHistory = loadState('gridHistory');
+    if (!currentHistory) {
+      currentHistory = gridData.map(row => row.map(() => []));
+    }
+
+    if (!Array.isArray(currentHistory[rowIndex][colIndex])) {
+      currentHistory[rowIndex][colIndex] = [];
+    }
+
+    const cellHistory = currentHistory[rowIndex][colIndex];
+    if (cellHistory.length === 0 || cellHistory[cellHistory.length - 1] !== initialState) {
+      cellHistory.push(initialState);
+    }
+
+    cellHistory.push(finalState);
+
+    localStorage.setItem('gridHistory', JSON.stringify(currentHistory));
+  } catch (error) {
+    console.error("Error saving state to history:", error);
+  }
 };
