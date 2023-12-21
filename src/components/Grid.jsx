@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Cell from './Cell';
-import { evaluateFormula, saveState, loadState, saveStateToHistory } from './gridHelper';
+import { evaluateFormula, saveState, loadState, saveStateToHistory } from '../utils/gridHelper';
 
 const initialGrid = () => {
   return Array.from({ length: 4 }, () => new Array(4).fill(''));
@@ -63,12 +63,12 @@ const Grid = () => {
   };
 
   const updateCell = (row, col, value) => {
-  setGridData(prevGrid => {
-    const newGrid = prevGrid.map(innerRow => [...innerRow]);
-    newGrid[row][col] = value;
-    return newGrid;
-  });
-};
+    setGridData(prevGrid => {
+      const newGrid = prevGrid.map(innerRow => [...innerRow]);
+      newGrid[row][col] = value;
+      return newGrid;
+    });
+  };
 
   const revertCellToSavedState = (rowIndex, colIndex) => {
     const historyState = loadState('gridHistory');
@@ -92,24 +92,24 @@ const Grid = () => {
   }
 
   return (
-    <div>
-      <div className=" grid grid-cols-4 gap-5  max-w-[990px] mx-auto h-fit">
-        {gridData.map((row, rowIndex) =>
-          row.map((cell, colIndex) => (
-            <Cell
-              ref={el => cellRefs.current[rowIndex][colIndex] = el}
-              key={`${rowIndex}-${colIndex}`}
-              value={cell}
-              onChange={(value) => updateCell(rowIndex, colIndex, value)}
-              onFocus={() => handleFocus(rowIndex, colIndex)}
-              onBlur={() => handleBlur(rowIndex, colIndex)}
-              onKeyDown={(e) => handleKeyPress(rowIndex, colIndex, e)}
-              onRevert={() => revertCellToSavedState(rowIndex, colIndex)}
-            />
-          ))
-        )}
-      </div>
+     <div className="max-w-[990px] mx-auto h-fit flex justify-center">
+    <div className="grid w-fit grid-cols-1 mobile-md:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-x-4">
+      {gridData.map((row, rowIndex) =>
+        row.map((cell, colIndex) => (
+          <Cell
+            ref={el => cellRefs.current[rowIndex][colIndex] = el}
+            key={`${rowIndex}-${colIndex}`}
+            value={cell}
+            onChange={(value) => updateCell(rowIndex, colIndex, value)}
+            onFocus={() => handleFocus(rowIndex, colIndex)}
+            onBlur={() => handleBlur(rowIndex, colIndex)}
+            onKeyDown={(e) => handleKeyPress(rowIndex, colIndex, e)}
+            onRevert={() => revertCellToSavedState(rowIndex, colIndex)}
+          />
+        ))
+      )}
     </div>
+  </div>
   );
 };
 

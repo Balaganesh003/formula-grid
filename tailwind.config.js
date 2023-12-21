@@ -8,9 +8,12 @@ module.exports = {
       colors: {
       'custom-red': '#FF3333',
       'custom-blue': '#3139FB',
-        'custom-dark': '#333333',
+      'custom-dark': '#333333',
       'custom-light':  '#FFFCEC',
-    },
+      },
+      screens: {
+        'mobile-md': '440px'
+      }
     },
   },
   plugins: [],
